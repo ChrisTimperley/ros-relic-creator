@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
+import requeses
 from datetime import datetime
 
 
-def most_recent_release_at_date(pkg_repo_url: str,
+def most_recent_release_at_date(pkg_repo_name: str,
+                                pkg_repo_owner_name: str,
                                 date: datetime
                                 ) -> str:
     """
     Determines the most recent tagged release of a given project that was
-    available at a given date and time.
+    available at a given date and time. Note that the project must be
+    hosted on GitHub for this method to work.
 
     Args:
-        pkg_repo_url: The URL of the Git repository used to host the source
-            code for the package.
+        pkg_repo_name: The name of the Git repository used to host the
+            package.
+        pkg_repo_owner_name: The name of the user or organisation that owns
+            the repository for the project. Note that the project must be
+            hosted on GitHub.
         date: The date that should be used when determining the most recent
             tagged release.
 
@@ -22,6 +28,13 @@ def most_recent_release_at_date(pkg_repo_url: str,
         Exception: if no release was available at the given date.
             (TODO: add custom exception.)
     """
+
+    # compute the URL for retrieving a list of releases for a given repo hosted
+    # on GitHub
+    # https://developer.github.com/v3/repos/releases/
+    url = "/repos/{}/{}/releases".format(pkg_repo_name,
+                                         pkg_repo_owner_name)
+
     raise NotImplementedError
 
 
