@@ -32,8 +32,16 @@ def most_recent_release_at_date(pkg_repo_name: str,
     # compute the URL for retrieving a list of releases for a given repo hosted
     # on GitHub
     # https://developer.github.com/v3/repos/releases/
-    url = "/repos/{}/{}/releases".format(pkg_repo_name,
-                                         pkg_repo_owner_name)
+    endpoint = "repos/{}/{}/releases".format(pkg_repo_name,
+                                              pkg_repo_owner_name)
+    url = "https://api.github.com/{}".format(endpoint)
+
+
+    # request v3 of the REST API via the `Accept` header
+    #
+    #   Accept: application/vnd.github.v3+json
+    #
+
 
     raise NotImplementedError
 
