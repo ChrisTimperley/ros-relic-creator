@@ -34,8 +34,10 @@ def most_recent_release_at_date(pkg_repo_name: str,
 
     # compute the URL for retrieving a list of releases for a given repo hosted
     # on GitHub
-    # https://developer.github.com/v3/repos/releases/
-    endpoint = "repos/{}/{}/releases".format(pkg_repo_owner_name,
+    # note: we use /tags since /releases only provides a list of "full"
+    #   releases, which in many cases is an empty list.
+    #   https://github.com/bcit-ci/CodeIgniter/issues/3421)
+    endpoint = "repos/{}/{}/tags".format(pkg_repo_owner_name,
                                               pkg_repo_name)
     url = "https://api.github.com/{}".format(endpoint)
 
