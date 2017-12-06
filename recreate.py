@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import requeses
+import requests
 from datetime import datetime
 
 
