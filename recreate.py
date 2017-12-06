@@ -19,9 +19,9 @@ def tags_with_dates(repo_name: str,
     Returns:
         An annotated list of release. Each release within the list is
         represented as a tuple of the form `(tag, sha, datetime)`, where
-        `tag` is the name of the tag, `sha` is the 7-character form of the
-        hexsha for the the commit associated with that tag, and `datetime` is
-        the date/time that the commit associated with the tag was made.
+        `tag` is the name of the tag, `sha` is the hexsha of the commit
+        associated with that tag, and `datetime` is the date/time that the
+        commit associated with the tag was made.
     """
 
     # compute the URL for retrieving a list of releases for a given repo hosted
@@ -33,8 +33,26 @@ def tags_with_dates(repo_name: str,
     url = "https://api.github.com/{}".format(endpoint)
     headers = {'Accept': 'application/vnd.github.v3+json'}
 
-    r = requests.get(url, headers=headers)
-    print(r.json())
+    page = 0
+    tags_with_commits : List[Tuple[str, str]] = []
+    while True:
+        page += 1
+        params = {'page': page}
+        r = requests.get(url, headers=headers, params=params)
+        bfr = r.json()
+
+        if not bfr:
+            break
+
+        if r.status_code == 403:
+            raise Exception("Reached API usage limit!")
+
+        for tag_info in bfr:
+            name = tag_info['name']
+            sha = tag_info['commit']['sha']
+            tags_with_commits.append((name, sha))
+
+    print(len(tags_with_commits))
 
     return []
 
