@@ -149,8 +149,16 @@ def most_recent_tag_at_date(pkg_repo_name: str,
 
     dated_tags = tags_with_dates(pkg_repo_name, pkg_repo_owner_name)
 
-    for tag in dated_tags:
-        print(tag)
+    # iterate through the list of tags until we hit one that was available at
+    # the given date. Of course, we could use a binary search to reduce
+    # complexity from O(n) to O(log n), but that would be silly -- the
+    # API calls are the bottleneck
+    for (tag_name, _, tag_dt) in dated_tags:
+        if tag_dt <= dt:
+            print("FOUND TAG: {}".format(tag_name))
+            return tag_name
+
+    raise Exception("Failed to find tag.")
 
 
 def recreate_historical_rosinstall(pkg_repo_url: str,
