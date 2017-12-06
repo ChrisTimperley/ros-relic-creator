@@ -1,11 +1,23 @@
 #!/usr/bin/env python3
+import os
+import sys
 import requests
 from typing import List, Tuple
 from datetime import datetime
 
 
+# Attempt to read the user's API token
+if not os.path.exists('github.token'):
+    print("ERROR: failed to find 'github.token' in current working directory.")
+    sys.exit(1)
+
+with open('github.token', 'r') as f:
+    API_TOKEN = f.read()
+
+
 def tags_with_dates(repo_name: str,
-                    repo_owner_name: str
+                    repo_owner_name: str,
+                    api_token: str = API_TOKEN
                     ) -> List[Tuple[str, str, datetime]]:
     """
     Returns an annotated list of all tagged releases for a given repository
@@ -31,7 +43,8 @@ def tags_with_dates(repo_name: str,
     #   https://github.com/bcit-ci/CodeIgniter/issues/3421)
     endpoint = "repos/{}/{}/tags".format(repo_owner_name, repo_name)
     url = "https://api.github.com/{}".format(endpoint)
-    headers = {'Accept': 'application/vnd.github.v3+json'}
+    headers = {'Accept': 'application/vnd.github.v3+json',
+               'Authorization': 'token {}'.format(api_token)}
 
     page = 0
     tags_with_commits : List[Tuple[str, str]] = []
