@@ -1,12 +1,35 @@
 #!/usr/bin/env python3
 import requests
+from typing import import List, Tuple
 from datetime import datetime
 
 
-def most_recent_release_at_date(pkg_repo_name: str,
-                                pkg_repo_owner_name: str,
-                                dt: datetime = None
-                                ) -> str:
+def tags_with_dates(repo_name: str,
+                    repo_owner_name: str
+                    ) -> List[Tuple[str, str, datetime]]:
+    """
+    Returns an annotated list of all tagged releases for a given repository
+    hosted on GitHub.
+
+    Args:
+        repo_name: The name of the repository on GitHub.
+        repo_owner_name: The user or organisation that controls the given
+            repository.
+
+    Returns:
+        An annotated list of release. Each release within the list is
+        represented as a tuple of the form `(tag, sha, datetime)`, where
+        `tag` is the name of the tag, `sha` is the 7-character form of the
+        hexsha for the the commit associated with that tag, and `datetime` is
+        the date/time that the commit associated with the tag was made.
+    """
+    raise NotImplementedError
+
+
+def most_recent_tag_at_date(pkg_repo_name: str,
+                            pkg_repo_owner_name: str,
+                            dt: datetime = None
+                            ) -> str:
     """
     Determines the most recent tagged release of a given project that was
     available at a given date and time. Note that the project must be
@@ -22,7 +45,8 @@ def most_recent_release_at_date(pkg_repo_name: str,
             tagged release.
 
     Returns:
-        The name of the release that was available at that moment in time.
+        The name of the tagged release that was available at that moment in
+        time.
 
     Raises:
         Exception: if no release was available at the given date.
