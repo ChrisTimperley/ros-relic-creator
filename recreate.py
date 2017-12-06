@@ -12,7 +12,7 @@ if not os.path.exists('github.token'):
     sys.exit(1)
 
 with open('github.token', 'r') as f:
-    API_TOKEN = f.read()
+    API_TOKEN = f.read().strip()
 
 
 def tags_with_dates(repo_name: str,
