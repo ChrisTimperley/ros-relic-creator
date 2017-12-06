@@ -108,6 +108,8 @@ def tags_with_dates(repo_name: str,
     annotated_tags = \
         [(name, sha, dt(sha)) for name, sha in annotated_tags]
 
+    # TODO: order tags by date (in descending order)
+
     return annotated_tags
 
 
