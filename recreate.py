@@ -5,7 +5,7 @@ from datetime import datetime
 
 def most_recent_release_at_date(pkg_repo_name: str,
                                 pkg_repo_owner_name: str,
-                                date: datetime
+                                dt: datetime = None
                                 ) -> str:
     """
     Determines the most recent tagged release of a given project that was
@@ -28,22 +28,22 @@ def most_recent_release_at_date(pkg_repo_name: str,
         Exception: if no release was available at the given date.
             (TODO: add custom exception.)
     """
+    # if no date/time is provided, use the current date/time
+    if not dt:
+        dt = datetime.today()
 
     # compute the URL for retrieving a list of releases for a given repo hosted
     # on GitHub
     # https://developer.github.com/v3/repos/releases/
-    endpoint = "repos/{}/{}/releases".format(pkg_repo_name,
-                                              pkg_repo_owner_name)
+    endpoint = "repos/{}/{}/releases".format(pkg_repo_owner_name,
+                                              pkg_repo_name)
     url = "https://api.github.com/{}".format(endpoint)
 
-
     # request v3 of the REST API via the `Accept` header
-    #
-    #   Accept: application/vnd.github.v3+json
-    #
+    r = requests.get(url,
+                     headers={'Accept': 'application/vnd.github.v3+json'})
 
-
-    raise NotImplementedError
+    print(r.json())
 
 
 def recreate_historical_rosinstall(pkg_repo_url: str,
@@ -64,3 +64,7 @@ def recreate_historical_rosinstall(pkg_repo_url: str,
         A string containing the rosinstall file.
     """
     raise NotImplementedError
+
+
+if __name__ == '__main__':
+    most_recent_release_at_date('php-src', 'php')
