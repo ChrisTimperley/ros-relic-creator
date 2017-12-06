@@ -163,7 +163,7 @@ def most_recent_tag_at_date(pkg_repo_name: str,
 
 def recreate_historical_rosinstall(pkg_repo_url: str,
                                    commit_sha: str
-                                   ) -> str:
+                                   ) -> dict:
     """
     Produces a ROS install that estimates the state of a given project and its
     dependencies at a specific moment in time, corresponding to a given commit.
@@ -178,6 +178,23 @@ def recreate_historical_rosinstall(pkg_repo_url: str,
     Returns:
         A string containing the rosinstall file.
     """
+
+    # use rosinstall_generator to obtain immediate dependencies for the repo
+    # ...
+
+    # find the most recent release of those dependencies that was available at
+    # the time of the commit
+    # ...
+
+    # for each dependency, find its immediate dependencies that haven't already
+    # been visited. recurse.
+
+    # reach fixed point.
+
+    # return contents of rosinstall as a dictionary
+    # use an external function to write contents of dictionary to disk
+
+
     raise NotImplementedError
 
 
