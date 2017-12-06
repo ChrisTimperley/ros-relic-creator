@@ -15,6 +15,29 @@ with open('github.token', 'r') as f:
     API_TOKEN = f.read().strip()
 
 
+def datetime_of_commit(repo_name: str,
+                       repo_owner_name: str,
+                       hexsha: str,
+                       api_token: str = API_TOKEN
+                       ) -> datetime:
+    """
+    Determines the date and time that a given commit was made to a particular
+    repository hosted on GitHub.
+
+    Params:
+        repo_name: The name of the repository on GitHub.
+        repo_owner_name: The name of the user or organisation that controls
+            the repository on GitHub.
+        hexsha:     The hexademical form of the SHA hash for the commit.
+        api_token:  The GitHub API access token that should be used to make
+            API calls.
+
+    Returns:
+        The date and time that the commit was made.
+    """
+    raise NotImplementedError
+
+
 def tags_with_dates(repo_name: str,
                     repo_owner_name: str,
                     api_token: str = API_TOKEN
@@ -47,7 +70,7 @@ def tags_with_dates(repo_name: str,
                'Authorization': 'token {}'.format(api_token)}
 
     page = 0
-    tags_with_commits : List[Tuple[str, str]] = []
+    annotated_tags : List[Tuple[str, str]] = []
     while True:
         page += 1
         params = {'page': page}
@@ -63,11 +86,16 @@ def tags_with_dates(repo_name: str,
         for tag_info in bfr:
             name = tag_info['name']
             sha = tag_info['commit']['sha']
-            tags_with_commits.append((name, sha))
+            annotated_tags.append((name, sha))
 
-    print(len(tags_with_commits))
 
-    return []
+    # Use the GitHub API to determine the date/time for each commit
+    dt = \
+        lambda sha: datetime_of_commit(repo_name, repo_owner_name, sha)
+    annotated_tags = \
+        [(name, sha, dt(sha)) for name, sha in annotated_tags]
+
+    return annotated_tags
 
 
 def most_recent_tag_at_date(pkg_repo_name: str,
