@@ -35,7 +35,20 @@ def datetime_of_commit(repo_name: str,
     Returns:
         The date and time that the commit was made.
     """
-    raise NotImplementedError
+    endpoint = "repos/{}/{}/commits/{}".format(repo_owner_name,
+                                               repo_name,
+                                               hexsha)
+    url = "https://api.github.com/{}".format(endpoint)
+    headers = {'Accept': 'application/vnd.github.v3+json',
+               'Authorization': 'token {}'.format(api_token)}
+
+    r = requests.get(url, headers=headers)
+    assert r.status_code == 200
+
+    # 2011-04-14T16:00:49Z
+    dt = r.json()['commit']['committer']['date']
+
+    return dt
 
 
 def tags_with_dates(repo_name: str,
@@ -129,6 +142,9 @@ def most_recent_tag_at_date(pkg_repo_name: str,
         dt = datetime.today()
 
     dated_tags = tags_with_dates(pkg_repo_name, pkg_repo_owner_name)
+
+    for tag in dated_tags:
+        print(tag)
 
 
 def recreate_historical_rosinstall(pkg_repo_url: str,
