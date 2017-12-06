@@ -109,7 +109,10 @@ def tags_with_dates(repo_name: str,
     annotated_tags = \
         [(name, sha, dt(sha)) for name, sha in annotated_tags]
 
-    # TODO: order tags by date (in descending order)
+    # order tags by date (in descending order)
+    annotated_tags = sorted(annotated_tags,
+                            key=lambda info: info[2],
+                            reverse=True)
 
     return annotated_tags
 
