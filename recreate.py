@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import requests
-from typing import import List, Tuple
+from typing import List, Tuple
 from datetime import datetime
 
 
@@ -23,7 +23,20 @@ def tags_with_dates(repo_name: str,
         hexsha for the the commit associated with that tag, and `datetime` is
         the date/time that the commit associated with the tag was made.
     """
-    raise NotImplementedError
+
+    # compute the URL for retrieving a list of releases for a given repo hosted
+    # on GitHub
+    # note: we use /tags since /releases only provides a list of "full"
+    #   releases, which in many cases is an empty list.
+    #   https://github.com/bcit-ci/CodeIgniter/issues/3421)
+    endpoint = "repos/{}/{}/tags".format(repo_owner_name, repo_name)
+    url = "https://api.github.com/{}".format(endpoint)
+    headers = {'Accept': 'application/vnd.github.v3+json'}
+
+    r = requests.get(url, headers=headers)
+    print(r.json())
+
+    return []
 
 
 def most_recent_tag_at_date(pkg_repo_name: str,
@@ -56,20 +69,7 @@ def most_recent_tag_at_date(pkg_repo_name: str,
     if not dt:
         dt = datetime.today()
 
-    # compute the URL for retrieving a list of releases for a given repo hosted
-    # on GitHub
-    # note: we use /tags since /releases only provides a list of "full"
-    #   releases, which in many cases is an empty list.
-    #   https://github.com/bcit-ci/CodeIgniter/issues/3421)
-    endpoint = "repos/{}/{}/tags".format(pkg_repo_owner_name,
-                                              pkg_repo_name)
-    url = "https://api.github.com/{}".format(endpoint)
-
-    # request v3 of the REST API via the `Accept` header
-    r = requests.get(url,
-                     headers={'Accept': 'application/vnd.github.v3+json'})
-
-    print(r.json())
+    dated_tags = tags_with_dates(pkg_repo_name, pkg_repo_owner_name)
 
 
 def recreate_historical_rosinstall(pkg_repo_url: str,
@@ -93,4 +93,4 @@ def recreate_historical_rosinstall(pkg_repo_url: str,
 
 
 if __name__ == '__main__':
-    most_recent_release_at_date('php-src', 'php')
+    most_recent_tag_at_date('php-src', 'php')
