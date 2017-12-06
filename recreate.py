@@ -45,8 +45,9 @@ def datetime_of_commit(repo_name: str,
     r = requests.get(url, headers=headers)
     assert r.status_code == 200
 
-    # 2011-04-14T16:00:49Z
-    dt = r.json()['commit']['committer']['date']
+    # uses ISO 8061 format
+    dt_s = r.json()['commit']['committer']['date']
+    dt = datetime.strptime(dt_s, '%Y-%m-%dT%H:%M:%SZ')
 
     return dt
 
